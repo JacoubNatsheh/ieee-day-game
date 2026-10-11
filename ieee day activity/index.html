@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>IEEE PPU Activities</title>
+<link rel="icon" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#46178f;--bg2:#2e0f63;--red:#e21b3c;--blue:#1368ce;--yellow:#d89e00;--green:#26890c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:inherit}html,body{height:100%;margin:0}
+body{background:var(--bg);color:#fff;font-family:Montserrat,"Segoe UI",Arial,sans-serif;font-weight:800;display:flex}
+#app{margin:auto;width:100%;max-width:1100px;min-height:100%;display:flex;flex-direction:column;padding:16px}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px}
+.badge{background:#fff;border-radius:22px;padding:12px;width:min(220px,55vw);box-shadow:0 7px 0 rgba(0,0,0,.25)}.badge img{width:100%;display:block}
+h1{font-size:clamp(28px,6vw,52px);font-weight:900;margin:0}h2{font-size:clamp(20px,4.5vw,38px);margin:0;font-weight:900}
+p{margin:0;opacity:.85;font-weight:600}
+.card{background:#fff;color:#222;border-radius:10px;padding:14px;width:min(360px,100%);display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+input{font:inherit;font-weight:800;font-size:18px;text-align:center;padding:13px;border:2px solid #bbb;border-radius:6px;width:100%;color:#222}
+input:focus{outline:3px solid var(--blue);border-color:var(--blue)}
+button{font:inherit;cursor:pointer;border:0;color:#fff;border-radius:6px}
+.go{background:#333;font-size:18px;padding:14px 22px;box-shadow:0 4px 0 #000}.go:active{transform:translateY(3px)}
+:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.err{color:#c00;font-size:14px;min-height:18px}
+.pill{background:rgba(0,0,0,.35);border-radius:6px;padding:8px 14px;font-size:16px}
+.top{display:flex;justify-content:space-between;gap:10px}
+.q{background:#fff;color:#222;border-radius:8px;padding:clamp(16px,3vw,28px);text-align:center;font-size:clamp(22px,4vw,40px);font-weight:900;margin:10px 0;box-shadow:0 5px 0 rgba(0,0,0,.25)}
+.clock{width:84px;height:84px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;font-size:36px;font-weight:900;border:5px solid #fff}
+.mid{flex:1;display:flex;align-items:center;justify-content:space-around;padding:8px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;font-size:clamp(16px,2.6vw,26px);padding:clamp(14px,3vw,26px);min-height:80px;box-shadow:0 5px 0 rgba(0,0,0,.3)}
+.opt svg{flex:0 0 36px;width:36px;height:36px}
+.c0{background:var(--red)}.c1{background:var(--blue)}.c2{background:var(--yellow)}.c3{background:var(--green)}
+.tiles{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:70vh}
+.tiles button{display:grid;place-items:center;box-shadow:0 6px 0 rgba(0,0,0,.3)}.tiles button:active{transform:translateY(4px)}.tiles svg{width:min(90px,40%);height:auto}
+.pin{font-size:clamp(54px,14vw,120px);font-weight:900;letter-spacing:6px;background:#fff;color:#222;border-radius:12px;padding:6px 26px}
+.names{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-height:34vh;overflow:auto;width:100%}.names span{background:rgba(0,0,0,.3);border-radius:5px;padding:5px 10px;font-size:14px}
+.big{font-size:clamp(60px,16vw,110px);font-weight:900;line-height:1}
+.full{position:fixed;inset:0;display:flex;padding:16px}.full>.center{width:100%}.ok{background:var(--green)}.no{background:var(--red)}
+.bars{display:flex;align-items:flex-end;gap:10px;height:150px}.bars div{width:clamp(50px,12vw,100px);border-radius:6px 6px 0 0;min-height:30px;display:flex;justify-content:center;padding-top:6px;font-size:22px}
+.lb{width:min(480px,100%);display:flex;flex-direction:column;gap:6px}.lb div{display:flex;justify-content:space-between;background:rgba(0,0,0,.3);border-radius:6px;padding:10px 14px}
+.pod{display:flex;align-items:flex-end;gap:8px}.pod div{width:min(150px,28vw);border-radius:8px 8px 0 0;text-align:center;padding:10px 4px;background:rgba(255,255,255,.2);overflow:hidden;text-overflow:ellipsis}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.opt{min-height:60px}}
+</style></head><body><div id="app"></div>
+<script>
+/* ===== 1) PASTE YOUR SUPABASE DETAILS HERE (see README) ===== */
+const SUPABASE_URL="https://ztpygzmvpfnlvxblwlzl.supabase.co/rest/v1/";
+const SUPABASE_KEY="sb_publishable_xypmzKbgvZcMGsIBMeB1aA_UuUPXpjA";
+/* ===== 2) EDIT YOUR QUESTIONS: [question, [4 answers], index of correct answer 0-3] ===== */
+const Q=[
+["What does IEEE stand for?",["Institute of Electrical and Electronics Engineers","International Electronics and Energy Entity","Institute of Electronic Engineering Education","Integrated Electrical and Energy Experts"],0],
+["What is the SI unit of electrical resistance?",["Volt","Ohm","Farad","Henry"],1],
+["According to Ohm's law, voltage equals…",["I ÷ R","R ÷ I","I × R","I + R"],2],
+["Which component stores electric charge?",["Resistor","Diode","Inductor","Capacitor"],3],
+["What is binary 1010 in decimal?",["8","12","10","14"],2],
+["Which IEEE standard defines Wi-Fi?",["IEEE 802.11","IEEE 802.3","IEEE 754","IEEE 1394"],0],
+["What does LED stand for?",["Low Energy Display","Light Emitting Diode","Linear Electric Device","Long Emission Dot"],1],
+["Which logic gate outputs 1 only when both inputs are 1?",["OR","XOR","AND","NOT"],2],
+["What is the SI unit of frequency?",["Watt","Hertz","Ampere","Tesla"],1],
+["Which language are Arduino sketches mainly written in?",["Python","Java","C/C++","Ruby"],2]];
+const T=20; /* seconds per question */
+/* ============================================================ */
+const SH=['<svg viewBox="0 0 32 32"><path fill="#fff" d="M16 4l13 24H3z"/></svg>','<svg viewBox="0 0 32 32"><path fill="#fff" d="M16 2l14 14-14 14L2 16z"/></svg>','<svg viewBox="0 0 32 32"><circle fill="#fff" cx="16" cy="16" r="13"/></svg>','<svg viewBox="0 0 32 32"><rect fill="#fff" x="4" y="4" width="24" height="24"/></svg>'];
+const app=document.getElementById('app'),$=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const logo=w=>`<div class="badge" style="width:${w}"><img src="logo.png" alt="IEEE Student Branch, Palestine Polytechnic University"></div>`;
+const qp=new URLSearchParams(location.search),HOST=qp.has('host');
+
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function api(path,opt={}){
+ const r=await fetch(SUPABASE_URL+'/rest/v1/'+path,{...opt,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=representation',...opt.headers}});
+ if(!r.ok)throw new Error(await r.text());const t=await r.text();return t?JSON.parse(t):null}
+const rpc=(fn,a)=>api('rpc/'+fn,{method:'POST',body:JSON.stringify(a)});
+const post=(t,b)=>api(t,{method:'POST',body:JSON.stringify(b)}),patch=(t,b)=>api(t,{method:'PATCH',body:JSON.stringify(b)});
+if(SUPABASE_URL.includes('YOUR-PROJECT')){
+ app.innerHTML=`<div class="center">${logo('160px')}<h1>Almost there</h1><p>Paste your Supabase URL and key at the top of index.html (see README.md).</p></div>`;
+}else HOST?host():join();
+
+/* ================= PLAYER ================= */
+let P,M,ME,ANS={},lastKey='';
+function join(){
+ app.innerHTML=`<div class="center">${logo('220px')}<h1>IEEE PPU Activities</h1>
+ <div class="card"><input id="pin" inputmode="numeric" maxlength="6" placeholder="Game PIN" value="${esc(qp.get('pin')||'')}" aria-label="Game PIN">
+ <input id="nm" maxlength="16" placeholder="Nickname" aria-label="Nickname" autocomplete="off"><div class="err" id="er" role="alert"></div><button class="go" id="jb">Enter</button></div></div>`;
+ $('jb').onclick=async()=>{
+  const pin=$('pin').value.trim(),name=$('nm').value.trim(),er=$('er');
+  if(!/^\d{6}$/.test(pin))return er.textContent='Enter the 6-digit PIN from the screen.';
+  if(!name)return er.textContent='Pick a nickname.';
+  $('jb').disabled=true;
+  try{
+   const g=await api(`games?pin=eq.${pin}&select=state`);
+   if(!g.length){er.textContent='No game with that PIN.';$('jb').disabled=false;return}
+   if(g[0].state!=='lobby'){er.textContent='That game already started.';$('jb').disabled=false;return}
+   const r=await post('players',{pin,name});
+   P={pin,id:r[0].id,name};poll();
+  }catch(e){er.textContent='Could not connect. Try again.';$('jb').disabled=false}
+ };
+}
+async function poll(){
+ try{
+  const g=await api(`games?pin=eq.${P.pin}&select=state,q,n`),m=g[0]||null;
+  if(!m){if(M!==null){M=null;renderP()}}
+  else if(!M||M.state!==m.state||M.q!==m.q){
+   if(m.state==='result'||m.state==='end')ME=(await api(`players?id=eq.${P.id}&select=*`))[0];
+   M=m;renderP();
+  }
+ }catch(e){}
+ setTimeout(poll,1000+Math.random()*500);
+}
+function msg(t,s){app.innerHTML=`<div class="center">${logo('120px')}<h1>${t}</h1>${s?`<p>${s}</p>`:''}<div class="pill">${esc(P.name)}</div></div>`}
+function renderP(){
+ const key=M?M.state+M.q:'x';if(key===lastKey)return;lastKey=key;
+ if(!M){msg('Game closed','Thanks for playing!');return}
+ const q=M.q;
+ if(M.state==='lobby')msg("You're in!",'Look for your nickname on the big screen.');
+ else if(M.state==='intro')msg(`Question ${q+1}`,'Get ready…');
+ else if(M.state==='question'){
+  if(ANS[q]!=null)return wait(ANS[q]);
+  app.innerHTML=`<div class="tiles">${[0,1,2,3].map(k=>`<button class="c${k}" data-k="${k}" aria-label="Answer ${k+1}">${SH[k]}</button>`).join('')}</div>`;
+  app.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+   const k=+b.dataset.k;if(ANS[q]!=null)return;ANS[q]=k;
+   post('answers',{pin:P.pin,q,player_id:P.id,k}).catch(()=>{});wait(k)});
+ }else if(M.state==='result'&&ME){
+  const ok=ME.ok;
+  app.innerHTML=`<div class="full ${ok?'ok':'no'}"><div class="center"><div class="big">${ok?'✓':ME.answered?'✗':'⏱'}</div><h1>${ok?'Correct!':ME.answered?'Incorrect':"Time's up"}</h1>
+  ${ok?`<p style="font-size:22px">+${ME.gain}${ME.streak>1?` · ${ME.streak} in a row`:''}</p>`:''}
+  <div class="pill">${ME.score} points · #${ME.rank} of ${M.n}</div></div></div>`;
+ }else if(M.state==='end'&&ME)msg(ME.rank<=3?`You finished #${ME.rank}!`:`You finished #${ME.rank}`,`${ME.score} points · ${M.n} players`);
+}
+function wait(k){app.innerHTML=`<div class="center"><div class="c${k}" style="padding:30px;border-radius:12px;width:110px">${SH[k]}</div><h2>Answer sent</h2><p>Waiting for the others…</p></div>`}
+
+/* ================= HOST ================= */
+let H;
+async function host(){
+ let pin=null;
+ for(let t=0;t<5&&!pin;t++){const c=String(Math.floor(100000+Math.random()*900000));try{await post('games',{pin:c});pin=c}catch(e){}}
+ if(!pin){app.innerHTML='<div class="center"><h1>Could not create a game</h1><p>Check your Supabase URL, key and the SQL setup.</p></div>';return}
+ H={pin,players:[],i:0,state:'lobby'};
+ const url=location.origin+location.pathname;
+ app.innerHTML=`<div class="center">${logo('150px')}<p>Join at ${esc(url)}</p><h2>Game PIN</h2><div class="pin" aria-live="polite">${pin}</div>
+ <div class="pill" id="cnt">0 players</div><div class="names" id="nms"></div><button class="go" id="st" disabled>Start game</button></div>`;
+ $('st').onclick=()=>next(0);lobby();
+}
+async function lobby(){
+ if(H.state!=='lobby')return;
+ try{
+  H.players=await api(`players?pin=eq.${H.pin}&select=name&limit=300`);
+  const v=H.players;$('cnt').textContent=v.length+(v.length===1?' player':' players');
+  $('nms').innerHTML=v.map(p=>`<span>${esc(p.name)}</span>`).join('');$('st').disabled=!v.length;
+ }catch(e){}
+ setTimeout(lobby,2000);
+}
+async function next(i){
+ H.i=i;H.state='intro';
+ await patch(`games?pin=eq.${H.pin}`,{state:'intro',q:i});
+ app.innerHTML=`<div class="center"><p>Question ${i+1} of ${Q.length}</p><h1>${esc(Q[i][0])}</h1></div>`;
+ await sleep(2500);startQ();
+}
+async function startQ(){
+ const i=H.i,q=Q[i];
+ await rpc('start_question',{p_pin:H.pin,p_q:i});
+ H.players=await api(`players?pin=eq.${H.pin}&select=name&limit=300`);
+ H.state='question';H.t0=Date.now();H.ac=0;
+ app.innerHTML=`<div class="top"><span class="pill">${i+1} / ${Q.length}</span><span class="pill">PIN ${H.pin}</span></div><div class="q">${esc(q[0])}</div>
+ <div class="mid"><div class="clock" id="clk">${T}</div><div class="pill" style="font-size:24px"><span id="ac">0</span> answers</div><button class="go" id="sk">Skip</button></div>
+ <div class="grid">${q[1].map((t,k)=>`<div class="opt c${k}">${SH[k]}<span>${esc(t)}</span></div>`).join('')}</div>`;
+ $('sk').onclick=finish;
+ H.tm=setInterval(()=>{const l=T-(Date.now()-H.t0)/1000;if($('clk'))$('clk').textContent=Math.max(0,Math.ceil(l));if(l<=0)finish()},250);
+ (async function pa(){
+  if(H.state!=='question'||H.i!==i)return;
+  try{const a=await api(`answers?pin=eq.${H.pin}&q=eq.${i}&select=k`);H.ac=a.length;if($('ac'))$('ac').textContent=H.ac;if(H.ac>=H.players.length)return finish()}catch(e){}
+  setTimeout(pa,1500);
+ })();
+}
+async function finish(){
+ if(H.state!=='question')return;H.state='scoring';clearInterval(H.tm);
+ await sleep(1500);
+ const cor=Q[H.i][2],counts=await rpc('score_question',{p_pin:H.pin,p_q:H.i,p_correct:cor,p_secs:T});
+ const rows=await api(`players?pin=eq.${H.pin}&select=name,score&order=score.desc&limit=300`);
+ H.rows=rows;H.state='result';
+ const mx=Math.max(1,...counts),last=H.i+1>=Q.length;
+ app.innerHTML=`<div class="center"><h2>${esc(Q[H.i][1][cor])}</h2>
+ <div class="bars">${counts.map((c,k)=>`<div class="c${k}" style="height:${30+c/mx*120}px;${k===cor?'outline:4px solid #fff':'opacity:.55'}">${c}</div>`).join('')}</div>
+ <div class="lb">${rows.slice(0,5).map((r,x)=>`<div><span>${x+1}. ${esc(r.name)}</span><span>${r.score}</span></div>`).join('')}</div>
+ <button class="go" id="nx">${last?'Final results':'Next question'}</button></div>`;
+ $('nx').onclick=()=>last?finale():next(H.i+1);
+}
+async function finale(){
+ H.state='end';await patch(`games?pin=eq.${H.pin}`,{state:'end'});
+ const r=H.rows,pd=(x,h)=>r[x]?`<div style="height:${h}px">${['🥇','🥈','🥉'][x]}<br>${esc(r[x].name)}<br>${r[x].score}</div>`:'';
+ app.innerHTML=`<div class="center">${logo('110px')}<h1>Final results</h1><div class="pod">${pd(1,150)}${pd(0,210)}${pd(2,110)}</div>
+ <div class="lb">${r.slice(3,10).map((x,k)=>`<div><span>${k+4}. ${esc(x.name)}</span><span>${x.score}</span></div>`).join('')}</div>
+ <button class="go" id="cl">Close game</button></div>`;
+ $('cl').onclick=async()=>{await api(`games?pin=eq.${H.pin}`,{method:'DELETE'});location.reload()};
+}
+</script></body></html>
